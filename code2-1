@@ -1,0 +1,25 @@
+#include "stdafx.h"
+#include <stdio.h>
+int main() {
+	int n;
+	int buf[100];
+	while (scanf_s("%d", &n) != EOF) {
+		for (int i = 0; i < n; i++) {
+			scanf_s("%d", &buf[i]);
+		}//输入待排序列
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n - 1 - i; j++) {
+				if (buf[j] > buf[j + 1]) {
+					int tmp = buf[j];
+					buf[j] = buf[j + 1];
+					buf[j + 1] = tmp;
+				}
+			}
+		}//冒泡排序
+		for (int i = 0; i < n; i++) {
+			printf_s("%d ",buf[i]);
+		}
+		printf_s("\n");
+	}
+	return 0;
+}
