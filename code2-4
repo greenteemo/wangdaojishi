@@ -1,0 +1,36 @@
+#include "stdafx.h"
+#include<stdio.h>
+#include<string.h>
+#include<algorithm>
+using namespace std;
+
+struct E {
+	char name[101];
+	int age;
+	int grade;
+}buf[1000];
+
+bool cmp(E a,E b) {
+	if (a.grade != b.grade)
+		return a.grade < b.grade;
+	int tmp = strcmp(a.name, b.name);
+	if (tmp != 0)
+		return tmp < 0;
+	return a.age < b.age;
+}
+
+int main() {
+	int n;
+	while (scanf_s("%d", &n)!=EOF) {
+		for (int i = 0; i < n;i++) {
+			scanf_s("%s%d%d",&buf[i].name, sizeof(buf[i].name), &buf[i].age, &buf[i].grade);		
+      //这里scanf_s是三参数的，第三个参数用来指定缓冲区的大小
+      //如scanf_s("%s", &a, sizeof(a))，如不指定，编译器会认识第二个变量&buf[i].name只读取一个字符
+		}
+		sort(buf, buf + n, cmp);
+		for (int i = 0; i < n;i++) {
+			printf_s("%s %d %d\n", buf[i].name, buf[i].age, buf[i].grade);
+		}
+	}
+	return 0;
+}
