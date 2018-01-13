@@ -1,0 +1,21 @@
+#include"stdafx.h"
+#include<stdio.h>
+
+int main() {
+	long long a, b;
+	int m;
+	while (scanf("%d%lld%lld", &m,&a,&b)!=EOF) {
+		if (m == 0) break;
+		a = a + b;
+		int ans[50], size = 0;
+		while (a!=0) {
+			ans[size++] = a%m;
+			a = a / m;
+		}
+		for (int i = size - 1; i >= 0;i--) {
+			printf("%d",ans[i]);
+		}
+		putchar('\n');
+	}
+	return 0;
+}
