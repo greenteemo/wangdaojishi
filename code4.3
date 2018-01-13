@@ -1,4 +1,5 @@
 #include"stdafx.h"
+
 #include<stdio.h>
 
 int main() {
@@ -8,10 +9,10 @@ int main() {
 		if (m == 0) break;
 		a = a + b;
 		int ans[50], size = 0;
-		while (a!=0) {
+		do{
 			ans[size++] = a%m;
 			a = a / m;
-		}
+		} while (a != 0);
 		for (int i = size - 1; i >= 0;i--) {
 			printf("%d",ans[i]);
 		}
