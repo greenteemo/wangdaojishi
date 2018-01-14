@@ -1,0 +1,40 @@
+#include"stdafx.h"
+#include<stdio.h>
+
+bool mark[10001];
+void init(int n) {
+	for (int i = 2; i < n;i++) {
+		mark[i] = false;		//标记为素数
+	}
+	for (int i = 2; i < n;i++) {
+		if (mark[i] == true) continue;
+		for (int j = i*i; j < n;j+=i) {
+			mark[j] = true;		//标记为非素数
+		}
+	}
+}
+
+int main() {
+	int n;
+	while (scanf("%d",&n)!=EOF) {
+		init(n);
+		bool isOutput = false;
+		for (int i = 2; i < n;i++) {
+			if (i % 10 == 1&&mark[i]==false) {
+				if (isOutput == false) {
+					printf("%d", i);
+					isOutput = true;
+				}
+				else {
+					printf(" %d", i);
+				}
+			}
+		}
+		if (isOutput == false)
+			printf("-1\n");
+		else
+			printf("\n");
+	}
+	
+	return 0;
+}
