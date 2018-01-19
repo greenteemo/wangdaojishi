@@ -1,0 +1,115 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<string.h>
+#define maxSize 100
+struct bigInteger {
+	int digit[maxSize];
+	int size;
+	
+	void init() {
+		for (int i = 0; i < maxSize; i++)
+			digit[i] = 0;
+		size = 0;
+	}
+
+	void set(int x) {
+		init();
+		do {
+			digit[size++] = x % 10000;
+			x /= 10000;
+		} while (x != 0);
+	}
+
+	bigInteger operator +(bigInteger &A) const {
+		bigInteger ret;
+		ret.init();
+		int carry = 0;
+		for (int i = 0; i < size || i < A.size;i++) {
+			ret.digit[ret.size++] = (digit[i] + A.digit[i] + carry) % 10000;
+			carry = (digit[i] + A.digit[i] + carry) / 10000;
+		}
+		if (carry != 0)
+			ret.digit[ret.size++] = carry;
+		return ret;
+	}
+
+	bigInteger operator *(int x) const {
+		bigInteger ret;
+		ret.init();
+		int carry = 0;
+		for (int i = 0; i < size;i++) {
+			ret.digit[ret.size++] = (digit[i] * x + carry) % 10000;
+			carry = (digit[i] * x + carry) / 10000;
+		}
+		if (carry != 0)
+			ret.digit[ret.size++] = carry;
+		return ret;
+	}
+
+	bigInteger operator / (int x) const {
+		bigInteger ret;
+		ret.init();
+		int r = 0;
+		int t;
+		for (int i = size - 1; i >= 0;i--) {
+			t = (r * 10000 + digit[i]) / x;
+			r = (r * 10000 + digit[i]) % x;
+			ret.digit[i] = t;
+		}
+		for (int i = maxSize; ret.digit[i-1] == 0;i--) {
+			ret.size = i;
+		}
+		return ret;
+	}
+
+	int operator % (int x) const {
+		int r = 0;
+		for (int i = size-1;i>=0;i--){
+			r = (r * 10000 + digit[i]) % x;
+		}
+		return r;
+	}
+
+}a,b;
+
+char str[10000];
+char ans[10000];
+
+int main() {
+	int m, n;
+	while (scanf("%d%d", &m,&n)!=EOF) {
+		scanf("%s", &str);
+		//m to 10
+		int length = strlen(str);
+		a.set(0);
+		b.set(1);
+		for (int i = length - 1; i >= 0;i--) {
+			if (str[i] >= '0'&&str[i] <= '9'){
+				a = a + b * (str[i] - '0');
+			}
+			else {
+				a = a + b * (str[i] - 'A' + 10);
+			}
+			b = b*m;
+		}
+		//10 to n
+		int ansSize = 0;
+		int tmp;
+		do {
+			tmp = a % n;
+			if(tmp>=10){
+				ans[ansSize++] = (tmp-10) + 'a';
+			}
+			else {
+				ans[ansSize++] = tmp+'0';
+			}
+			a = a / n;
+		} while (a.digit[0]!=0||a.size!=1);
+		//output
+		for (int i = ansSize-1; i>=0;i--) {
+			printf("%c",ans[i]);
+		}
+		putchar('\n');
+	}
+	return 0;
+}
