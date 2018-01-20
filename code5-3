@@ -1,0 +1,49 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<algorithm>
+#define N 101
+using namespace std;
+
+int Tree[N];
+
+int findRoot(int x) {
+	if (Tree[x] == -1)return x;
+	else {
+		int tmp = findRoot(Tree[x]);
+		Tree[x] = tmp;
+		return tmp;
+	}
+}
+
+struct Edge {
+	int a;
+	int b;
+	int cost;
+	bool operator < (const Edge &A) const {
+		return cost < A.cost;
+	}
+};
+
+int main() {
+	int n;
+	Edge edge[6000];
+	while (scanf("%d",&n)!=EOF && n!=0) {
+		for (int i = 1; i < N; i++)Tree[i] = -1;
+		for (int i = 1; i <= n*(n - 1) / 2;i++) 
+			scanf("%d%d%d",&edge[i].a, &edge[i].b, &edge[i].cost);
+		sort(edge+1,edge+1+n*(n-1)/2);		//不能写成sort(edge[1],edge[1+n*(n-1)/2])的形式!!!
+		int ans = 0;
+		int a, b;
+		for (int i = 1; i <= n*(n - 1) / 2;i++) {
+			a = findRoot(edge[i].a);
+			b = findRoot(edge[i].b);
+			if (findRoot(edge[i].a)!= findRoot(edge[i].b)) {
+				Tree[a] = b;
+				ans += edge[i].cost;
+			}
+		}
+		printf("%d\n",ans);
+	}
+	
+	return 0;
+}
