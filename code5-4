@@ -1,0 +1,65 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<algorithm>
+#include<math.h>
+#define N 101
+using namespace std;
+
+int Tree[N];
+
+int findRoot(int x) {
+	if (Tree[x] == -1)return x;
+	else {
+		int tmp = findRoot(Tree[x]);
+		Tree[x] = tmp;
+		return tmp;
+	}
+}
+
+struct Edge {
+	int a;
+	int b;
+	double cost;
+	bool operator < (const Edge &A) const {
+		return cost < A.cost;
+	}
+}edge[6000];
+
+struct Point {
+	double x, y;
+	double getDistance(Point A) {
+		double tmp = (x - A.x)*(x - A.x) + (y - A.y)*(y - A.y);
+		return sqrt(tmp);
+	}
+}list[101];
+
+int main() {
+	int n;
+	while (scanf("%d",&n)!=EOF) {
+		for (int i = 1; i < N; i++)Tree[i] = -1;
+		for (int i = 1; i <= n;i++) 
+			scanf("%lf%lf",&list[i].x, &list[i].y);
+		int size = 1;
+		for (int i = 1; i <= n;i++) {
+			for (int j = i + 1; j <= n;j++) {
+				edge[size].a = i;
+				edge[size].b = j;
+				edge[size++].cost = list[i].getDistance(list[j]);
+			}
+		}
+		sort(edge+1,edge+1+n*(n-1)/2);	
+		double ans = 0;
+		int a, b;
+		for (int i = 1; i <= n*(n - 1) / 2;i++) {
+			a = findRoot(edge[i].a);
+			b = findRoot(edge[i].b);
+			if (findRoot(edge[i].a)!= findRoot(edge[i].b)) {
+				Tree[a] = b;
+				ans += edge[i].cost;
+			}
+		}
+		printf("%.2lf\n",ans);
+	}
+	
+	return 0;
+}
