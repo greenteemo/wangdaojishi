@@ -1,0 +1,69 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<vector>
+using namespace std;
+
+struct E {
+	int next;
+	int c;
+	int p;
+};
+
+vector<E> edge[101];
+int dis[101];
+int cost[101];
+bool mark[101];
+
+int main() {
+	int n, m;
+	while (scanf("%d%d",&n,&m)!=EOF) {
+		if (m == 0 && n == 0)break;
+		for (int i = 1; i <= n; i++)edge[i].clear();
+		for (int i = 1; i <= n;i++) {
+			mark[i] = false;
+			dis[i] = -1;
+			cost[i] = -1;
+		}
+		int a, b, c, p;
+		while (m-- != 0) {
+			scanf("%d%d%d%d",&a,&b,&c,&p);
+			E tmp;
+			tmp.next = b;
+			tmp.c = c;
+			tmp.p = p;
+			edge[a].push_back(tmp);
+			tmp.next = a;
+			edge[b].push_back(tmp);
+		}
+		int s, v;
+		scanf("%d%d",&s,&v);
+		int newP = s;
+		mark[newP] = true;
+		dis[newP] = 0;
+		cost[newP] = 0;
+		for (int i = 1; i < n;i++) {
+			for (int j = 0; j < edge[newP].size();j++) {
+				int t = edge[newP][j].next;
+				int c = edge[newP][j].c;
+				int p = edge[newP][j].p;
+				if (mark[t] == true)continue;
+				if (dis[t] == -1 || dis[t] > dis[newP] + c || dis[t] == dis[newP] + c && cost[t] > cost[newP] + p){
+					dis[t] = dis[newP] + c;
+					cost[t] = cost[newP] + p;
+				}
+			}
+			int min = 123123123;
+			for (int i = 1; i <= n;i++) {
+				if (mark[i] == true)continue;
+				if (dis[i] == -1)continue;
+				if (dis[i] < min) {
+					min = dis[i];
+					newP = i;
+				}
+			}
+			mark[newP] = true;
+		}
+		printf("%d %d\n", dis[v],cost[v]);
+	}
+	return 0;
+}
