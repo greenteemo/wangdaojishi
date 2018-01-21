@@ -1,0 +1,59 @@
+#include"stdafx.h"
+#include<stdio.h>
+#include<vector>
+using namespace std;
+
+struct E {
+	int next;
+	int c;
+};
+
+vector<E> point[101];
+bool mark[101];
+int dis[101];
+
+int main() {
+	int n, m;
+	while (scanf("%d%d",&n,&m)!=EOF) {
+		if (m == 0 && n == 0)break;
+		for (int i = 1; i <= n; i++)point[i].clear();
+		for (int i = 2; i <= n;i++) {
+			mark[i] = false;
+			dis[i] = -1;
+		}
+		mark[1] = true;
+		dis[1] = 0;
+		int a, b, c;
+		for (int i = 1; i <= m;i++) {
+			scanf("%d%d%d", &a, &b, &c);
+			E tmp;
+			tmp.c = c;
+			tmp.next = b;
+			point[a].push_back(tmp);
+			tmp.next = a;
+			point[b].push_back(tmp);
+		}
+		int newP = 1;
+		for (int i = 1; i < n;i++) {
+			int min = 123123123;
+			for (int j = 0; j < point[newP].size();j++) {
+				int t = point[newP][j].next;
+				int c = point[newP][j].c;
+				if (mark[t] == true) continue;
+				if (dis[t] == -1 || dis[t] > dis[newP] + c)
+					dis[t] = dis[newP] + c;
+			}
+			for (int i = 1; i <= n;i++) {
+				if (mark[i] == true)continue;
+				if (dis[i] == -1)continue;
+				if(dis[i]<min){
+					min = dis[i];
+					newP = i;
+				}
+			}
+			mark[newP] = true;
+		}
+		printf("%d\n",dis[n]);
+	}
+	return 0;
+}
