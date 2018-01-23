@@ -1,0 +1,61 @@
+#include"stdafx.h"
+#include<stdio.h>
+
+char maze[8][8];
+int m, n, t;
+bool success;
+int go[][2] = {
+	0,1,
+	0,-1,
+	1,0,
+	-1,0,
+};
+
+void DFS(int x,int y,int time) {
+	for (int i = 0; i < 4;i++) {
+		int nx = x + go[i][0];
+		int ny = y + go[i][1];
+		if (nx<1 || nx>m || ny<1 || ny>n)continue;
+		if (maze[nx][ny] == 'X') continue;
+		if (maze[nx][ny] == 'D') {
+			if (time + 1 == t) {
+				success = true;
+				return;
+			}
+			else continue;
+		}
+		maze[nx][ny] = 'X';
+		DFS(nx,ny,time+1);
+		maze[nx][ny] = '.';
+		if (success)return;
+	}
+}
+
+int main() {
+	while (scanf("%d%d%d",&m,&n,&t)!=EOF) {
+		if (m == 0 && n == 0 && t==0)break;
+		success = false;
+		for (int i = 1; i <= m;i++) {
+			scanf("%s",maze[i]+1);
+		}
+		int nx, ny;
+		for (int i = 1; i <= m;i++) {
+			for (int j = 1; j <= n;j++) {
+				if (maze[i][j]=='D') {
+					nx = i;
+					ny = j;
+				}
+			}
+		}
+		for (int i = 1; i <= m; i++) {
+			for (int j = 1; j <= n; j++) {
+				if (maze[i][j]=='S' && (i+j)%2==((nx+ny)%2+t%2)%2) {
+					maze[i][j] = 'X';
+					DFS(i,j,0);
+				}
+			}
+		}
+		printf("%s\n",success?"YES":"NO");
+	}
+	return 0;
+}
