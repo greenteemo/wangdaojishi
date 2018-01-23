@@ -1,0 +1,15 @@
+#include"stdafx.h"
+#include<stdio.h>
+
+long long F(int x) {
+	if (x == 1) return 2;
+	else return 3 * F(x - 1) + 2;
+}
+
+int main() {
+	int x;
+	while (scanf("%d", &x) != EOF) {
+		printf("%lld\n",F(x));
+	}
+	return 0;
+}
