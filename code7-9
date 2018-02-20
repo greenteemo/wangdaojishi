@@ -1,0 +1,45 @@
+#include"stdafx.h"
+#include<stdio.h>
+#define INF 0x7fffffff
+
+int min(int a,int b) {
+	return a < b ? a : b;
+}
+
+struct E {
+	int v;
+	int w;
+}list[501];
+
+int dp[10001];
+
+int main() {
+	int t;
+	scanf("%d",&t);
+	while (t--!=0) {
+		int empty, s;
+		scanf("%d%d", &empty, &s);
+		s -= empty;
+		int n;
+		scanf("%d", &n);
+		for (int i = 1; i <= n;i++) {
+			scanf("%d%d",&list[i].v,&list[i].w);
+		}
+		for (int i = 1; i <= s;i++) {
+			dp[i] = INF;
+		}
+		dp[0] = 0;
+		for (int i = 1; i <= n;i++) {
+			for (int j = list[i].w; j <= s;j++) {
+				if(dp[j-list[i].w]!=INF){
+					dp[j] = min(dp[j-list[i].w]+list[i].v,dp[j]);
+				}
+			}
+		}
+		if (dp[s] != INF)
+			printf("min is %d\n", dp[s]);
+		else
+			printf("impossible!\n");
+	}
+	return 0;
+}
